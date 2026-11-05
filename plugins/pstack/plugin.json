@@ -4,7 +4,8 @@
   "version": "0.15.36-codex.1",
   "description": "On-demand engineering workflows for Codex: investigate, design, implement, review, verify, and ship.",
   "author": {
-    "name": "Lauren Tan"
+    "name": "Roberto Ansuini",
+    "url": "https://github.com/robansuini"
   },
   "homepage": "https://github.com/robansuini/pstack-codex",
   "repository": "https://github.com/robansuini/pstack-codex",
@@ -24,7 +25,7 @@
       "interface": {
         "displayName": "pstack for Codex",
         "shortDescription": "On-demand engineering workflows and verification",
-        "developerName": "Lauren Tan \u00b7 Codex adaptation",
+        "developerName": "Roberto Ansuini",
         "category": "Developer Tools",
         "logo": "./assets/logo.png"
       }

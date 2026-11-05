@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Package validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 scripts/validate.py
+      - name: Check shell syntax
+        run: |
+          sh -n scripts/install.sh plugins/pstack/skills/poteto-mode/scripts/watch-pr/watch-pr
+          bash -n plugins/pstack/skills/poteto-mode/scripts/worktree-audit.sh
+      - run: git diff --check
+
+  helpers:
+    name: Helpers (${{ matrix.os }}, Node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            node: '22.18.0'
+          - os: macos-15
+            node: '26.12.1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: '1.4.4'
+      - name: Install watcher dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: plugins/pstack/skills/poteto-mode/scripts
+      - name: Test watcher and plan checker
+        run: bun test watch-pr check-plan.test.ts
+        working-directory: plugins/pstack/skills/poteto-mode/scripts
+      - name: Typecheck watcher
+        run: npm run typecheck
+        working-directory: plugins/pstack/skills/poteto-mode/scripts
+      - name: Check Node launcher
+        run: plugins/pstack/skills/poteto-mode/scripts/watch-pr/watch-pr --help
+      - name: Install statechart dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: plugins/pstack/skills/statechart/scripts
+      - name: Test statechart (live TLC tests require a separate runtime)
+        run: npm test
+        working-directory: plugins/pstack/skills/statechart/scripts
+
+  installation:
+    name: Clean Codex installation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      CODEX_HOME: ${{ github.workspace }}/.tools/codex-home
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '26.12.1'
+          package-manager-cache: false
+      - run: npm install --global @openai/codex@0.164.0 --no-audit --no-fund
+      - run: ./scripts/install.sh
+      - run: python3 scripts/verify-install.py
