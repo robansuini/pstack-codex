@@ -24,6 +24,8 @@ jobs:
         with:
           persist-credentials: false
       - run: python3 scripts/validate.py
+      - name: Test upstream sync and publishing safeguards
+        run: python3 scripts/test-upstream-sync.py
       - name: Check shell syntax
         run: |
           sh -n scripts/install.sh plugins/pstack/skills/poteto-mode/scripts/watch-pr/watch-pr

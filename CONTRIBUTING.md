@@ -40,4 +40,4 @@ CODEX_HOME="$pstack_test_home" python3 scripts/verify-install.py
 
 Delete the temporary directory when finished. This check starts the app-server for skill discovery; it does not run a model turn or require an OpenAI API key.
 
-The maintainer reviews and merges releases. Automatic upstream synchronization is not yet configured. For an upstream update, inspect the changed workflows, preserve Codex adaptations, refresh provenance, and account for new or removed skills before changing the expected package inventory.
+The maintainer reviews and merges releases. A daily workflow prepares draft upstream sync PRs; see [the upstream sync guide](docs/upstream-sync-guide.md). For an upstream update, inspect the changed workflows, preserve Codex adaptations, refresh provenance, and account for new or removed skills before changing the expected package inventory. Run `python3 scripts/test-upstream-sync.py` when changing the sync scripts.

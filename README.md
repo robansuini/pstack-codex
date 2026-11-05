@@ -2,7 +2,7 @@
 
 An on-demand Codex port of [Lauren Tan's pstack](https://github.com/cursor/plugins/tree/main/pstack), based on upstream `0.15.36` at commit `2776ddd2355d6d6c8747d3964600f28daf62f049`. The original MIT license is preserved. This is an independent adaptation, not an official Cursor or OpenAI release.
 
-Maintained by [Roberto Ansuini](https://github.com/robansuini). Report port-specific problems in [this repository's issues](https://github.com/robansuini/pstack-codex/issues). See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and local checks.
+Maintained by [Roberto Ansuini](https://github.com/robansuini). Report port-specific problems in [this repository's issues](https://github.com/robansuini/pstack-codex/issues), or use [private vulnerability reporting](SECURITY.md) for security issues. See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and local checks.
 
 ## Use
 
@@ -23,7 +23,7 @@ Role models inherit the current Codex model. `$setup-pstack` optionally writes s
 
 ## Install or refresh globally
 
-Requires Python 3.9+ for the checkout scripts and a Codex CLI with `plugin marketplace add` and `plugin add`. The direct GitHub installation does not require Python. Public repositories can be cloned without GitHub authentication; if you are installing while this repository is private, authenticate an account with access.
+Requires Python 3.9+ for the checkout scripts and a Codex CLI with `plugin marketplace add` and `plugin add`. The direct GitHub installation does not require Python or GitHub authentication.
 
 To install directly from GitHub:
 
@@ -43,7 +43,9 @@ python3 scripts/verify-install.py
 
 The installer registers this checkout as the user-level `pstack-local` marketplace and installs `pstack@pstack-local` into Codex's plugin cache. It does not write to your other projects. Keep this checkout for future refreshes; the installed copy runs from the cache. Re-run the installer after editing the maintained source. Skills become available on the next turn; if an existing client has a stale catalog, start a new chat or refresh the client.
 
-For a GitHub-based install, refresh with `codex plugin marketplace upgrade pstack-local`, then `codex plugin add pstack@pstack-local`. For a checkout-based install, pull the reviewed changes with `git pull --ff-only`, then run `./scripts/install.sh`. Updates are manual; scheduled upstream synchronization is not configured.
+For a GitHub-based install, refresh with `codex plugin marketplace upgrade pstack-local`, then `codex plugin add pstack@pstack-local`. For a checkout-based install, pull the reviewed changes with `git pull --ff-only`, then run `./scripts/install.sh`. Updating your installed plugin remains manual.
+
+Upstream is checked daily. When `pstack/` changes, the repository automation opens a draft sync PR as `robansuini`, preserving Codex adaptations and reporting conflicts for review. It does not merge changes or publish releases. See [the upstream sync guide](docs/upstream-sync-guide.md) for the schedule, credential setup, and review process.
 
 Remove the plugin and its marketplace with:
 
