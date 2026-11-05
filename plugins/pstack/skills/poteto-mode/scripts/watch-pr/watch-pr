@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+scripts_dir=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+node "$scripts_dir/bootstrap.mjs"
+exec node --disable-warning=ExperimentalWarning "$scripts_dir/watch-pr/main.ts" "$@"

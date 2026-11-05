@@ -1,0 +1,6 @@
+interface:
+  display_name: "benchmark-checklist"
+  short_description: "On-demand pstack engineering workflow"
+  default_prompt: "Use $benchmark-checklist for this task."
+policy:
+  allow_implicit_invocation: false

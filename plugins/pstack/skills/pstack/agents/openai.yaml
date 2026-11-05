@@ -1,0 +1,6 @@
+interface:
+  display_name: "pstack"
+  short_description: "Choose an on-demand engineering workflow"
+  default_prompt: "Use $pstack to choose and run the workflow for this task."
+policy:
+  allow_implicit_invocation: false

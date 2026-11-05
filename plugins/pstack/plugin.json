@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "pstack",
+  "version": "0.15.36-codex.1",
+  "description": "On-demand engineering workflows for Codex: investigate, design, implement, review, verify, and ship.",
+  "author": {
+    "name": "Lauren Tan"
+  },
+  "homepage": "https://github.com/robansuini/pstack-codex",
+  "repository": "https://github.com/robansuini/pstack-codex",
+  "license": "MIT",
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "workflow",
+    "principles",
+    "agent-style",
+    "subagents",
+    "unslop"
+  ],
+  "extensions": {
+    "com.openai": {
+      "requires_local_executor": true,
+      "interface": {
+        "displayName": "pstack for Codex",
+        "shortDescription": "On-demand engineering workflows and verification",
+        "developerName": "Lauren Tan \u00b7 Codex adaptation",
+        "category": "Developer Tools",
+        "logo": "./assets/logo.png"
+      }
+    }
+  }
+}
