@@ -60,7 +60,7 @@ class PreparationTests(unittest.TestCase):
         self.base = self.commit()
         self.pin = {"repository": sync.UPSTREAM.removesuffix(".git"), "path": "pstack", "commit": self.base, "version": "0.15.36"}
         (self.root / "UPSTREAM.json").write_text(json.dumps(self.pin))
-        (self.root / "README.md").write_text(f"based on upstream `0.15.36` at commit `{self.base}`")
+        (self.root / "README.md").write_text("based on upstream **0.15.36**. See [UPSTREAM.json](UPSTREAM.json) for the exact source revision.")
         (self.plugin / "plugin.json").write_text(json.dumps({"name": "pstack", "version": "0.15.36-codex.1", "author": {"name": "Roberto Ansuini"}}))
         (self.plugin / "helper.txt").write_text("Codex\ntwo\nthree\nfour\nfive\n")
 
@@ -99,12 +99,26 @@ class PreparationTests(unittest.TestCase):
         manifest = json.loads((self.plugin / "plugin.json").read_text())
         self.assertEqual(manifest["version"], "0.15.36-codex.2")
         self.assertEqual(manifest["author"]["name"], "Roberto Ansuini")
-        self.assertIn(target, (self.root / "README.md").read_text())
+        self.assertIn("based on upstream **0.15.36**", (self.root / "README.md").read_text())
+        self.assertNotIn(target, (self.root / "README.md").read_text())
 
     def test_new_upstream_version(self):
         self.write("plugin.json", json.dumps({"name": "pstack", "version": "0.15.37"}))
         self.commit()
         self.assertEqual(self.prepare()["port_version"], "0.15.37-codex.1")
+        self.assertEqual((self.root / "README.md").read_text(),
+                         "based on upstream **0.15.37**. See [UPSTREAM.json](UPSTREAM.json) for the exact source revision.")
+
+    def test_missing_or_duplicate_readme_version_does_not_advance_provenance(self):
+        self.write("plugin.json", json.dumps({"name": "pstack", "version": "0.15.37"}))
+        self.commit()
+        for text in ("Introduction without version", "based on upstream **0.15.36**\nbased on upstream **0.15.36**"):
+            with self.subTest(readme=text):
+                (self.root / "README.md").write_text(text)
+                with self.assertRaisesRegex(ValueError, "exactly one README"):
+                    self.prepare()
+                self.assertEqual(json.loads((self.root / "UPSTREAM.json").read_text()), self.pin)
+                self.assertEqual(json.loads((self.plugin / "plugin.json").read_text())["version"], "0.15.36-codex.1")
 
     def test_conflict_keeps_port_and_pin(self):
         self.write("helper.txt", "Cursor\ntwo\nthree\nfour\nfive\n")

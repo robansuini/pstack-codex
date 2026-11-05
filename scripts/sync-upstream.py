@@ -170,13 +170,17 @@ def prepare(root, upstream, target):
             port_version = f"{version}-codex.{int(match[1]) + 1}"
         else:
             port_version = f"{version}-codex.1"
+        readme = root / "README.md"
+        updated_readme, replacements = re.subn(
+            r"based on upstream \*\*\d+\.\d+\.\d+\*\*",
+            f"based on upstream **{version}**", readme.read_text())
+        if replacements != 1:
+            raise ValueError("Expected exactly one README upstream version; refusing to advance provenance")
         manifest["version"] = port_version
         manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
         pin.update(commit=target, version=version)
         (root / "UPSTREAM.json").write_text(json.dumps(pin, indent=2) + "\n")
-        readme = root / "README.md"
-        readme.write_text(re.sub(r"based on upstream `[^`]+` at commit `[0-9a-f]{40}`",
-                                f"based on upstream `{version}` at commit `{target}`", readme.read_text()))
+        readme.write_text(updated_readme)
         state["port_version"] = port_version
 
     state.update(conflicts=conflicts, applied=applied)

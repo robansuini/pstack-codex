@@ -1,6 +1,6 @@
 # pstack for Codex
 
-An on-demand Codex port of [Lauren Tan's pstack](https://github.com/cursor/plugins/tree/main/pstack), based on upstream `0.15.36` at commit `2776ddd2355d6d6c8747d3964600f28daf62f049`. The original MIT license is preserved. This is an independent adaptation, not an official Cursor or OpenAI release.
+An on-demand Codex port of [Lauren Tan's pstack](https://github.com/cursor/plugins/tree/main/pstack), based on upstream **0.15.36**. The original MIT license and attribution are preserved. This is an independent adaptation, not an official Cursor or OpenAI release. See [UPSTREAM.json](UPSTREAM.json) for the exact source revision.
 
 Maintained by [Roberto Ansuini](https://github.com/robansuini). Report port-specific problems in [this repository's issues](https://github.com/robansuini/pstack-codex/issues), or use [private vulnerability reporting](SECURITY.md) for security issues. See [CONTRIBUTING.md](CONTRIBUTING.md) for changes and local checks.
 
